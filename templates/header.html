@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>COVE</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="/static/d3.v3.min.js"></script>
+    <script src="/static/jquery-2.0.3.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/static/jquery-ui-1.10.4/ui/minified/jquery.ui.core.min.js"></script>
+    <script src="/static/jquery-ui-1.10.4/ui/minified/jquery.ui.datepicker.min.js"></script>
+    <script src="/static/arrows.js"></script>
+    <script src="/static/colony_view.js"></script>
+
+    
+    <script type="text/javascript">
+    	$(document).ready(function(){
+
+          // Change highlighted item in nav bar
+          if ("{{ viewSelection }}" == "colony") {
+              $(".viewSelector").filter('.active').removeClass('active');
+              $("#colonyView").addClass('active');
+          }
+          else {
+              $(".viewSelector").filter('.active').removeClass('active');
+              $("#statsView").addClass('active');
+          }
+
+          // Event to go to a new page
+          $("#colonyView").click( function()
+          {
+              window.location.href = "http://{{ curr_domain }}/viz/colony";
+          });
+          $("#statsView").click( function()
+          {
+              window.location.href = "http://{{ curr_domain }}/viz/stats";
+          });
+       });
+    </script>
+    
+    {% block viewHead %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">COVE - Colony Visualization Environment</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="viewSelector active" id="colonyView"><a href="#">Colony View</a></li>
+        <li class="viewSelector" id="statsView"><a href="#">Stats View</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">View Options<span class="caret"></span></a>
+          <div class="dropdown-menu" role="menu">
+          
+            {% block optionMenu %}
+            {% endblock %}
+
+          </div>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+{% block viewBody %}
+{% endblock %}
+
+</body>
+
+</html>
