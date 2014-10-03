@@ -1,0 +1,28 @@
+{
+  "name": "cove-restack",
+  "version": "1.0.0",
+  "description": "The Cove mice colony visualization tool ported to a MEAN stack.",
+  "main": "cove.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/centraleggcommand/cove-restack.git"
+  },
+  "keywords": [
+    "Visualization",
+    "D3",
+    "Angular",
+    "Node"
+  ],
+  "author": "Roderick Lisam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/centraleggcommand/cove-restack/issues"
+  },
+  "homepage": "https://github.com/centraleggcommand/cove-restack",
+  "dependencies": {
+    "express": "^4.9.5"
+  }
+}
