@@ -1,33 +1,24 @@
-<div class="panel-group" id="optionContainer" style="width:400px;">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a data-toggle="collapse" data-target="searchPanel" data-parent="#optionContainer" href="#">Search</a>
-            </h3>
-            <div class="panel-collapse collapse" id="searchPanel">
+<div class="panel-group" id="optionContainer" style="width:400px;" ng-controller="optionController" ng-click="$event.stopPropagation()">
+
+    <accordion close-others="true">
+        <accordion-group heading="Search">
                 <div class="panel-body">
-                <table cellspacing="10">
+                <table cellspacing="10" ng-controller="searchMouseController">
                     <tr><td>
                     <label><b>MouseId: </b></label>
-                    <input id="searchMouse" type="text" name="searchbox">
-                    <input id="submitSearch" type="button" value="Find">
+                    <input id="searchMouse" type="text" name="searchbox" ng-model="mouseId">
+                    <input id="submitSearch" type="button" value="Find" option-button>
+                    {{text}}
                     </td></tr>
                     <tr><td>
                     <p id="searchError" style="color:red; display:none;">MouseId not found in the display</p>
                     </td></tr>
                 </table>
                 </div>
-            </div>
-        </div>
-    </div>
+        </accordion-group>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a data-toggle="collapse" data-target="filterPanel" data-parent="#optionContainer" href="#">Filter</a>
-            </h3>
-            <div class="panel-collapse collapse" id="filterPanel">
-                <div class="panel-body">
+        <accordion-group heading="Filter">
+            <div class="panel-body">
                 <div class="container">
                     <div class="row"><label><b>Gender:</b></label></div>
                     <div id="genderFilter">
@@ -107,22 +98,15 @@
                     <input id="doneGenotypeFilter" type="button" value="Done">
                 </td></tr>
                 <tr><td>
-                    <input id="addGenotypeFilter" type="image" src="/static/img/plus.png" alt="Add" width="24" height="24">
+                    <input id="addGenotypeFilter" type="image" src="/img/plus.png" alt="Add" width="24" height="24">
                     Add genotype filter
                 </td></tr>
                 </table>
-                </div>
             </div>
-        </div>
-    </div>
+        </accordion-group>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a data-toggle="collapse" data-target="groupPanel" data-parent="#optionContainer" href="#">Group</a>
-            </h3>
-            <div class="panel-collapse collapse" id="groupPanel">
-                <div class="panel-body">
+        <accordion-group heading="Group">
+            <div class="panel-body">
                 <table>
                 <tr> <td>
                     <input type="checkbox" id="genderCheck" value="gender" checked="true">Gender
@@ -135,18 +119,11 @@
                 </td></tr>
 -->
                 </table>
-                </div>
             </div>
-        </div>
-    </div>
+        </accordion-group>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <a data-toggle="collapse" data-target="imagePanel" data-parent="#optionContainer" href="#">Visual Features</a>
-            </h3>
-            <div class="panel-collapse collapse" id="imagePanel">
-                <div class="panel-body">
+        <accordion-group heading="Visual Features">
+            <div class="panel-body">
                 <table cellspacing="10">
                     <tr><td>
                         <label><b>Circle Size By: </b></label>
@@ -187,13 +164,11 @@
                         <input id="doneGenotypeColor" type="button" value="Done">
                     </td></tr>
                     <tr class="genotypeColor" style="display:none"><td>
-                        <input id="addGenotypeColor" type="image" src="/static/img/plus.png" alt="Add" width="24" height="24">
+                        <input id="addGenotypeColor" type="image" src="/img/plus.png" alt="Add" width="24" height="24">
                         Add genotype color
                     </td></tr>
                 </table>
-                </div>
             </div>
-        </div>
-    </div>
-        
+        </accordion-group>
+    </accordian>        
 </div>

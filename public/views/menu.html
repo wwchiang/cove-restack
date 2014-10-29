@@ -13,12 +13,17 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" ></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="/static/jquery-ui-1.10.4/ui/minified/jquery.ui.core.min.js"></script>
-    <script src="/static/jquery-ui-1.10.4/ui/minified/jquery.ui.datepicker.min.js"></script>
+    <script src="/jquery-ui-1.10.4/ui/minified/jquery.ui.core.min.js"></script>
+    <script src="/jquery-ui-1.10.4/ui/minified/jquery.ui.datepicker.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.js"></script>
-    <script src="/static/arrows.js"></script>
-    <script src="/static/colony_view.js"></script>
+    <script src="/ui-bootstrap-custom-0.10.0.min.js"></script>
+    <script src="/ui-bootstrap-custom-tpls-0.10.0.min.js"></script>
+    <script src="/js/cove-module.js"></script>
+    <script src="/js/colony/colony-module.js"></script>
+    <script src="/js/colony/options-colony.js"></script>
+    <script src="/js/arrows.js"></script>
+    <script src="/js/colony/colony_view.js"></script>
 
     <style>
         td {padding: 5px;}
@@ -61,37 +66,11 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-    <script>
-        var coveModule = angular.module('coveApp', ["ngRoute"]);
-
-        //Initialization
-        coveModule.controller("menuController", ['$scope', '$location', function($scope, $location) {
-            
-            var set_selected_view = function() {
-                $scope.selectedView = $location.url();
-                if (!$scope.selectedView) {
-                    $scope.selectedView = "/colony";
-                }
-            }
-
-            $scope.$on( '$locationChangeSuccess', set_selected_view );
-        }]);
-
-        coveModule.directive('colonyoptions', function() {
-            return {
-                restrict: 'E',
-                templateUrl: 'colony-options.html',
-                replace: true
-            };
-        });
-
-        //coveModule.config( function($routeProvider) {
-        //    $routeProvider
-        //        .when("/colony", {templateUrl: "views/colony.html"})
-        //        .when("/stats", {templateUrl: "views/stats.html"});
-        //});
-
-    </script>
+    <div> 
+        <div id="graph" d3colony></div>
+        <div id="mouseInfoDetails" > </div>
+        <div id="mouseInfoLineage" > </div>
+    </div>
 
 </body>
 

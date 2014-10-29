@@ -24,5 +24,10 @@
   "homepage": "https://github.com/centraleggcommand/cove-restack",
   "dependencies": {
     "express": "^4.9.5"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1"
   }
 }
