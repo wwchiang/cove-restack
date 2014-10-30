@@ -1,4 +1,4 @@
-//File: colony-plot-module.js
+//File: colony-module.js
 //Purpose: Features for the colony view plot
 
 var plotModule = angular.module('colonyPlot', []);
@@ -11,24 +11,6 @@ var node_factory = function() {
 //plotModule.factory('nodeDrawing', ['$http', function(http) {
 plotModule.factory('nodeDrawing', node_factory);
 
-//Initialize the svg area displaying d3 visualizations.
-//plotModule.controller("colonyPlotController", function() {
-//});
-
-var pcontroller = function($scope) {
-    console.log($scope.msg);
-}
-
-plotModule.directive('plotParent', function() {
-    var initObj = {
-        restrict: 'A',
-        scope: {
-            msg: '@'
-        },
-        controller: pcontroller
-    };
-    return initObj;
-});
 
 plotModule.directive('child1', function() {
     var initObj = {
@@ -56,20 +38,6 @@ plotModule.directive('searchButton', function() {
                 ctl[0].testFxn(); 
             });
         }
-    };
-    return initObj;
-});
-
-//Directive for initial plot
-plotModule.directive('d3colony', function() {
-    var initObj = {
-        restrict: 'A',
-        scope: {},
-        //Why does parameter need to be $scope vs scope?
-        controller: function($scope, nodeDrawing) {
-            $scope.apiPlot = nodeDrawing;
-        },
-        link: d3colony_link
     };
     return initObj;
 });
@@ -116,8 +84,4 @@ var node_drawing_service = function(http) {
     return {
         dummyVal : "Test value"
     };
-}
-
-var d3colony_link = function(scope, element, attrs) {
-    element.text(scope.apiPlot.dummyVal);
 }

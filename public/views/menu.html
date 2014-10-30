@@ -21,9 +21,11 @@
     <script src="/ui-bootstrap-custom-tpls-0.10.0.min.js"></script>
     <script src="/js/cove-module.js"></script>
     <script src="/js/colony/colony-module.js"></script>
+    <script src="/js/colony/colony-controller.js"></script>
     <script src="/js/colony/options-colony.js"></script>
+    <script src="/js/colony/colony-parent-directive.js"></script>
+    <script src="/js/colony/child-plot-directive.js"></script>
     <script src="/js/arrows.js"></script>
-    <script src="/js/colony/colony_view.js"></script>
 
     <style>
         td {padding: 5px;}
@@ -31,9 +33,9 @@
 
 </head>
 
-<body>
+<body ng-controller="colonyPlotController">
 
-    <div plot-parent msg="bonjour">
+    <div plot-parent init-config="CV">
 
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
@@ -69,8 +71,8 @@
     </nav>
 
     <div> 
-        <div id="graph" d3colony></div>
-        <div id="mouseInfoDetails" child1> </div>
+        <div id="graph" d3colony ></div>
+        <div id="mouseInfoDetails" > </div>
         <div id="mouseInfoLineage" > </div>
     </div>
 

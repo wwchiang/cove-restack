@@ -9,7 +9,7 @@ plotModule.directive('plotParent', function() {
     var initObj = {
         restrict: 'A',
         scope: {
-            init: '@initConfig'
+            CV: '=initConfig'
         },
         controller: plot_parent_directive
     };
