@@ -3,6 +3,9 @@
 
 var plotModule = angular.module('colonyPlot', []);
 
+var node_factory = function() {
+    return {};
+}
 
 //Factory to provide functions to create d3 circles representing mice.
 //plotModule.factory('nodeDrawing', ['$http', function(http) {
@@ -11,6 +14,51 @@ plotModule.factory('nodeDrawing', node_factory);
 //Initialize the svg area displaying d3 visualizations.
 //plotModule.controller("colonyPlotController", function() {
 //});
+
+var pcontroller = function($scope) {
+    console.log($scope.msg);
+}
+
+plotModule.directive('plotParent', function() {
+    var initObj = {
+        restrict: 'A',
+        scope: {
+            msg: '@'
+        },
+        controller: pcontroller
+    };
+    return initObj;
+});
+
+plotModule.directive('child1', function() {
+    var initObj = {
+        restrict: 'A',
+        require: ['^plotParent'],
+        scope: {
+        },
+        link: function( scope, element, attrs, ctl) {
+            ctl[0].testFxn = function() {
+                element.text("Hola!");
+            }
+        }
+    };
+    return initObj;
+});
+
+plotModule.directive('searchButton', function() {
+    var initObj = {
+        restrict: 'A',
+        require: ['^plotParent'],
+        scope: {
+        },
+        link: function( scope, element, attrs, ctl) {
+            element.on('click', function() {
+                ctl[0].testFxn(); 
+            });
+        }
+    };
+    return initObj;
+});
 
 //Directive for initial plot
 plotModule.directive('d3colony', function() {

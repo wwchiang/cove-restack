@@ -33,6 +33,8 @@
 
 <body>
 
+    <div plot-parent msg="bonjour">
+
     <nav class="navbar navbar-default" role="navigation">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -68,9 +70,12 @@
 
     <div> 
         <div id="graph" d3colony></div>
-        <div id="mouseInfoDetails" > </div>
+        <div id="mouseInfoDetails" child1> </div>
         <div id="mouseInfoLineage" > </div>
     </div>
+
+    </div><!-- end of directive used as parent for sibling directives that need to communicate 
+               using the parent as holder of the api -->
 
 </body>
 

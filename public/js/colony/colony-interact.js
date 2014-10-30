@@ -1,18 +1,17 @@
-//File: colony-plot-module.js
-//Purpose: Features for the colony view plot
+//File: colony-controller.js
+//Purpose: 
 
 var plotModule = angular.module('colonyPlot', []);
 
 plotModule.factory('initData', ['$http', function(http) {
-    http.get('/mice.txt').success(function(data, status, headers, config) {
-        return data;
-    });
+    //Return a promise for the data.
+    return http.get('/mice.txt');
 }]);
 
 //Initialize the svg area displaying d3 visualizations.
 plotModule.controller("colonyPlotController", ['$scope', 'initData', function(scope, initData) {
 
-    //-- Helper functions
+    //-- Helper functions and initial values to configure the plot such as dimensions and utilities.
 
     // Containers for global data to be referenced explicitly.
     scope.CV = {}; //data for general colony view
@@ -226,7 +225,14 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
     }
 
     //-- Run initialization
-    scope.initialLayout = initialize( initData);
+    // initialLayout is a promise obj
+    scope.initialLayout = initData.then( 
+        function(result) {
+            return initialize( result.data);
+        },
+        function( error) {
+            console.error( error);
+        });
 
 }]);
 
