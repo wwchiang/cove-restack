@@ -36,48 +36,6 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
         return true;
     }
     
-    // Assign values to the scope.CV.fit_scale function and scope.CV.genFoci positions
-    function set_scale_foci( nodeLayouts) {
-        // Determine the horizontal spacing for each generation based on root node radius.
-        for (var i=0; i < nodeLayouts.length; i++) {
-            var currGen = nodeLayouts[i];
-            for (var j=0; j < currGen.length; j++) {
-                if (currGen[j].depth == 0) {
-                    scope.CV.genFoci[i] = {'radius': currGen[j].r,
-                        'x': currGen[j].x,
-                        'y': currGen[j].y};
-                    break;
-                }
-            }
-        }
-    
-        var genPadding = 25;
-        // Add diameter of each generation to scale width.
-        var totSpan = scope.CV.genFoci.reduce( function( prev, curr, i, array) {
-            return prev + curr.radius * 2;
-        }, 0)
-        totSpan = totSpan + (genPadding * (nodeLayouts.length - 1));
-        // Get max radius to scale the height.
-        var maxRadius = scope.CV.genFoci.reduce( function( prev, curr, i, array) {
-            return (prev < curr.radius) ? curr.radius : prev;
-        }, 0)
-    
-        // Create scale function
-        var x_scale = d3.scale.linear().domain([0, totSpan]).range([0, scope.CV.width]);
-        var y_scale = d3.scale.linear().domain([0, maxRadius*2]).range([0, scope.CV.height]);
-        scope.CV.fit_scale = (x_scale(maxRadius) < y_scale(maxRadius)) ? x_scale : y_scale;
-    
-        // Assign foci values
-        var runningSum = 0; // Keep track of offset from left of graph
-        for (var i=0; i < scope.CV.genFoci.length; i++) {
-            var scaledRadius = scope.CV.fit_scale(scope.CV.genFoci[i].radius);
-            scope.CV.genFoci[i].radius = scaledRadius;
-            scope.CV.genFoci[i]['dx'] = runningSum + scaledRadius - scope.CV.genFoci[i].x;
-            scope.CV.genFoci[i]['dy'] = 0;
-            runningSum = runningSum + genPadding + (scaledRadius * 2);
-        }
-    
-    }
     
     // Function to create the minimal object structure needed for circle packing
     function mice_data_format( data) {
@@ -179,7 +137,6 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
     
         scope.CV.active_genotype_filters = [];
         scope.CV.disabled_genotype_filters = [];
-        scope.CV.size_by = function() { return 1;}
     
         scope.CV.width = 950,
         scope.CV.height = 560;
@@ -202,32 +159,16 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
         scope.IV.diagonal = d3.svg.diagonal()
         .projection(function(d) { return [d.y, d.x]; });
     
-        scope.CV.genFoci = [];
+        //scope.CV.genFoci = [];
+        var estimateFoci = [];
         // Estimate boundary circle of each generation to assign layout size
-        for (var i=0; i < scope.CV.allMice.length; i++) {
-            // Calculate circle size based on number of nodes
-            var totalArea = 64* scope.CV.allMice[i].length;
-            scope.CV.genFoci[i] = {"estimate": Math.sqrt(totalArea) };
-        }
-    
-        // Use the circle packing layout to calculate node positions for each generation.
-        var nodeLayouts = [];
-        for (var i=0; i < scope.CV.miceGenData.length; i++) {
-            nodeLayouts.push( d3.layout.pack().size([scope.CV.genFoci[i].estimate * 2, scope.CV.height]).padding(10)
-                    .value( scope.CV.size_by)
-                    .nodes( scope.CV.miceGenData[i]));
-        }
-    
-        set_scale_foci( nodeLayouts);
-    
-        return nodeLayouts;
     }
 
     //-- Run initialization
     // initialLayout is a promise obj
-    scope.initialLayout = initData.then( 
+    scope.initialConfig = initData.then( 
         function(result) {
-            return initialize( result.data);
+            initialize( result.data);
         },
         function( error) {
             console.error( error);
