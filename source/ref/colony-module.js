@@ -5,7 +5,7 @@ var plotModule = angular.module('colonyPlot', []);
 
 var node_factory = function() {
     return {};
-}
+};
 
 //Factory to provide functions to create d3 circles representing mice.
 //plotModule.factory('nodeDrawing', ['$http', function(http) {
@@ -76,12 +76,3 @@ plotModule.directive('d3lineage',  function() {
     };
     return initObj;
 });
-
-//-- Implementation
-
-//Function to create service for changing the colony view.
-var node_drawing_service = function(http) {
-    return {
-        dummyVal : "Test value"
-    };
-}

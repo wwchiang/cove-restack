@@ -1,17 +1,17 @@
-<div class="panel-group" id="optionContainer" style="width:400px;" ng-controller="optionController" ng-click="$event.stopPropagation()">
+<div class="panel-group" id="optionContainer" style="width:400px;" ng-click="$event.stopPropagation()">
 
     <accordion close-others="true">
         <accordion-group heading="Search">
                 <div class="panel-body">
-                <table cellspacing="10" ng-controller="searchMouseController">
+                <table cellspacing="10">
                     <tr><td>
                     <label><b>MouseId: </b></label>
                     <input id="searchMouse" type="text" name="searchbox" ng-model="mouseId">
-                    <input id="submitSearch" type="button" value="Find" search-button>
-                    {{text}}
+                    <input id="submitSearch" type="button" value="Find" search-btn>
+                    
                     </td></tr>
                     <tr><td>
-                    <p id="searchError" style="color:red; display:none;">MouseId not found in the display</p>
+                    <p id="searchError" style="color:red;">{{searchResponse}}</p>
                     </td></tr>
                 </table>
                 </div>
@@ -23,13 +23,13 @@
                     <div class="row"><label><b>Gender:</b></label></div>
                     <div id="genderFilter">
                         <div class="col-md-1">
-                            <input type="radio" name="gender" value="All" checked="true">All
+                            <input type="radio" name="gender" value="All" checked="true" gender-filter>All
                         </div>
                         <div class="col-md-1">
-                            <input type="radio" name="gender" value="M" >Male
+                            <input type="radio" name="gender" value="M" gender-filter>Male
                         </div>
                         <div class="col-md-1">
-                            <input type="radio" name="gender" value="F" >Female
+                            <input type="radio" name="gender" value="F" gender-filter>Female
                         </div>
                     </div>
                 </div>
@@ -37,18 +37,18 @@
                     <div class="row"><label><b>Age:</b></label></div>
                     <div id="ageFilter">
                         <div class="col-md-1">
-                            <input type="radio" name="dob" value="All" checked="true">All
+                            <input type="radio" name="dob" value="All" checked="true" ng-click='ageFilter = "All"'>All
                         </div>
                         <div class="col-md-1">
-                            <input type="radio" name="dob" value="Date" >DOB Range
+                            <input type="radio" name="dob" value="Date" ng-click='ageFilter = "Date"' >DOB Range
                         </div>
                         <div class="col-md-1">
-                            <input type="radio" name="dob" value="Age" >Age Range
+                            <input type="radio" name="dob" value="Age" ng-click='ageFilter = "Age"' >Age Range
                         </div>
                     </div>
                 </div>
                 <div class="container">
-                    <div class="row" id="dobSelector" style="display:none">
+                    <div class="row" id="dobSelector" ng-show='ageFilter === "Date"'>
                         <div class="col-md-1">
                             <label>Begin:</label>
                             <input id="dateStart" size="10">
@@ -58,7 +58,7 @@
                             <input id="dateEnd" size="10">
                         </div>
                     </div>
-                    <div class="row" id="ageSelector" style="display:none">
+                    <div class="row" id="ageSelector" ng-show='ageFilter === "Age"'>
                         <div class="col-md-1">
                             <label>Min days:</label>
                             <input id="ageStart" size="10" >
@@ -109,7 +109,7 @@
             <div class="panel-body">
                 <table>
                 <tr> <td>
-                    <input type="checkbox" id="genderCheck" value="gender" checked="true">Gender
+                    <input type="checkbox" id="genderCheck" value="gender" gender-group>Gender
                 </td></tr>
                 <tr><td>
                     <input type="checkbox" id="litterCheck" value="litter">Litter

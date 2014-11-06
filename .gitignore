@@ -1,3 +1,5 @@
 # ignore packages installed by npm
 node_modules
+public
 *.swp
+bak-*

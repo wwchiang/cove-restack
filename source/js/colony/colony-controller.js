@@ -98,8 +98,13 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
                         return innerHierarchy;
                     };
     
-                    // Recursively apply format
-                    return applyFormat( '',this.filteredHierarchy, 0);
+                    if( this.format_fxns.length > 0) {
+                        // Recursively apply format
+                        return applyFormat( '',this.filteredHierarchy, 0);
+                    }
+                    else {
+                        return this.filteredHierarchy;
+                    }
                 },
                 // The id parameter needs to correlate with DOM checkbox that uses the 'fmt' function
                 'add_format': function( id, fmt) {
@@ -175,5 +180,3 @@ plotModule.controller("colonyPlotController", ['$scope', 'initData', function(sc
         });
 
 }]);
-
-
