@@ -11,7 +11,19 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     //The coordinates of the center of each circle that represents a generation group.
     plotConfig.genFoci = [];
 
+
     //-- Helper functions
+
+
+    // Function to create the minimal object structure needed for circle packing.
+    //Convert to format for hierarchical packing (1 level per generation).
+    function mice_data_format( data) {
+        var dataFormatted = [];
+        for (var i=0; i < data.length; i++) {
+            dataFormatted.push( {'name': 'Gen' + i, 'children': data[i]});
+        }
+        return dataFormatted;
+    }
 
 
     var assign_default_color = function() { return "grey";};
@@ -79,7 +91,7 @@ var child_plot_link = function(scope, element, attrs, ctl) {
 
     // Format mice data to have hierarchy of generation then gender type
     var format_gender = function( id) {
-        scope.CV.formattedData.add_format( id, function ( rawNodes) {
+        plotConfig.formattedData.add_format( id, function ( rawNodes) {
             // Create additional grouping by gender
             var genderGroup = [];
             var femaleGrouping =  {'name': 'female',
@@ -107,7 +119,7 @@ var child_plot_link = function(scope, element, attrs, ctl) {
 
 
     var remove_format_gender = function( id) {
-        scope.CV.formattedData.remove_format( id);
+        plotConfig.formattedData.remove_format( id);
         update_view();
     };
 
@@ -312,7 +324,7 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     //}
 
     //Function to create elements for the plot.
-    var create_initial_view = function ( initNodes) {
+    var create_initial_view = function ( ) {
 
         //var divGraph = d3.select("#graph");
         var divGraph = d3.select(element[0]);
@@ -348,13 +360,15 @@ var child_plot_link = function(scope, element, attrs, ctl) {
         //else if (colorBy == "genotype") { scope.CV.color_fxn = assign_genotype_color;}
         //else { scope.CV.color_fxn = assign_gender_color; }
 
-        set_scale_foci( initNodes);
+        var nodeHierarchy = plotConfig.formattedData.get_hierarchy();
+        var nodeLayouts = layout_generations( nodeHierarchy);
+        set_scale_foci( nodeLayouts);
     
-        for (var i=0; i < initNodes.length; i++) {
+        for (var i=0; i < nodeLayouts.length; i++) {
             var genGrp = scope.CV.svg.append("g").datum(i)
                     .attr("id","g" + i)
                     .attr("transform", "translate(" + plotConfig.genFoci[i].dx + ", " + plotConfig.genFoci[i].dy + ")" );
-            genGrp.selectAll(".gen" + i).data(initNodes[i])
+            genGrp.selectAll(".gen" + i).data(nodeLayouts[i])
                     .enter()
                     .append("circle")
                     .attr("cx", function(d) { return d.x; })
@@ -405,7 +419,7 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     //or adding nodes or grouping structure.
     var update_view = function () {
         
-        var nodeHierarchy = scope.CV.formattedData.get_hierarchy();
+        var nodeHierarchy = plotConfig.formattedData.get_hierarchy();
 
         var nodeLayouts = layout_generations( nodeHierarchy);
 
@@ -501,8 +515,8 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     //Filter the data by checking for a single value in the given object attribute name.
     var filter_value = function( id, attrName, attrVal) {
         //Clear any previous filter for the same id.
-        scope.CV.formattedData.remove_filter( id);
-        scope.CV.formattedData.add_filter( id,  function(item) {
+        plotConfig.formattedData.remove_filter( id);
+        plotConfig.formattedData.add_filter( id,  function(item) {
             return item[attrName] == attrVal;
         });
         update_view();
@@ -512,8 +526,8 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     //Filter the data by checking for a high and low value in the given object attribute name.
     var filter_range = function( id,  attrName, attrValLow, attrValHigh) {
         //Clear any previous filter for the same id.
-        scope.CV.formattedData.remove_filter( id);
-        scope.CV.formattedData.add_filter( id,  function(item) {
+        plotConfig.formattedData.remove_filter( id);
+        plotConfig.formattedData.add_filter( id,  function(item) {
             var lowBool = false;
             var hiBool = false;
             var dob = parseInt(item[attrName]);
@@ -538,7 +552,7 @@ var child_plot_link = function(scope, element, attrs, ctl) {
 
 
     var remove_filter = function( id) {
-        scope.CV.formattedData.remove_filter( id);
+        plotConfig.formattedData.remove_filter( id);
         update_view();
     };
 
@@ -577,14 +591,97 @@ var child_plot_link = function(scope, element, attrs, ctl) {
                 };
             }
     
-            //var layout = layout_generations( scope.CV.formattedData.get_hierarchy());
-            var layout = layout_generations( scope.CV.miceGenData);
-            create_initial_view( layout); 
+            //The allMice object is an array of arrays for generation data, and element a json object.
+            
+            // Mice data format needs to support additional hierarchy such as by gender and litter.
+            // Create an object that stores fxns that need to be applied to the original raw data
+            // to achieve the filtering and grouping specified by user.
+            plotConfig.formattedData = { 
+                // format_fxns are functions that take one parameter - array of raw data objects
+                'filteredHierarchy': mice_data_format( scope.CV.allMice),
+                // format fxns add an additional level of grouping to leaf nodes
+                'format_fxns': [],
+                // filter functions take one parameter - a node to test
+                'filter_fxns': [],
+                // perform the grouping functions and return data in format for circle packing
+                'get_hierarchy': function() {
+                    // Recursive helper fxn
+                    var that = this;
+                    var applyFormat = function( parentName, currLevel, format_index) {
+                        var innerHierarchy = [];
+                        for (var ci=0; ci < currLevel.length; ci++) {
+                            var formattedGroup =
+                                // Ensure the group name is unique for the circles denoting a group, and not
+                                // a node, ie. a female and male group will both have a group representing litter 1
+                                {'name': parentName + currLevel[ci].name,
+                                 'colorGroup': typeof currLevel[ci].colorGroup !== 'undefined' ?
+                                    currLevel[ci].colorGroup : 'rgba(150,150,150,.9)',
+                                 'children': that.format_fxns[format_index]( currLevel[ci].children) };
+                            // A depth first approach in recursion, in which the format_index
+                            // corresponds to depth
+                            if ( (format_index + 1) < that.format_fxns.length) {
+                                // Overwrite children array with additional hierarchy
+                                formattedGroup.children = applyFormat( formattedGroup.name, formattedGroup.children, format_index + 1);
+                            }
+                            else {
+                                // Modify the leaf 'name' with a parent prefix
+                                for( var i=0; i < formattedGroup.children.length; i++) {
+                                    formattedGroup.children[i].name = currLevel[ci].name + formattedGroup.children[i].name;
+                                }
+                            }
+                            innerHierarchy.push( formattedGroup);
+                        }
+                        return innerHierarchy;
+                    };
+            
+                    if( this.format_fxns.length > 0) {
+                        // Recursively apply format
+                        return applyFormat( '',this.filteredHierarchy, 0);
+                    }
+                    else {
+                        return this.filteredHierarchy;
+                    }
+                },
+                // The id parameter needs to correlate with DOM checkbox that uses the 'fmt' function
+                'add_format': function( id, fmt) {
+                    // Attach the id as an attribute belonging to the fmt function object
+                    fmt.id = id;
+                    this.format_fxns.push( fmt);
+                },
+                'remove_format': function( id) {
+                    this.format_fxns = this.format_fxns.filter( function( elem) { return elem.id != id; });
+                },
+                'add_filter': function( id, filterFxn) {
+                    // Attach the id as an attribute belonging to the fmt function object
+                    filterFxn.id = id;
+                    this.filter_fxns.push( filterFxn);
+                    //this.filteredHierarchy = mice_data_format( scope.CV.allMice);
+                    // Apply additional filter
+                    // Filters designate what *can* be displayed.
+                    // Filter members of each generation
+                    for (var g=0; g < this.filteredHierarchy.length; g++) {
+                        this.filteredHierarchy[g].children = this.filteredHierarchy[g].children.filter( filterFxn); 
+                    }
+                },
+                'remove_filter': function( id) {
+                    this.filter_fxns = this.filter_fxns.filter( function( elem) { return elem.id != id; });
+                    this.filteredHierarchy = mice_data_format( scope.CV.allMice);
+                    // Re-Apply remaining filters
+                    for (var fi=0; fi < this.filter_fxns.length; fi++ ) {
+                        // Filter members of each generation
+                        for (var g=0; g < this.filteredHierarchy.length; g++) {
+                            this.filteredHierarchy[g].children = this.filteredHierarchy[g].children.filter(this.filter_fxns[fi]); 
+                        }
+                    }
+                }
+            };
+
+            create_initial_view( ); 
         }
     //).then(
     //    // Give the plot an initial grouping by gender.
     //    function() {
-    //        scope.CV.formattedData.add_format( "genderCheck", create_gender_format);
+    //        plotConfig.formattedData.add_format( "genderCheck", create_gender_format);
     //        update_view(); 
     //    }
     );
