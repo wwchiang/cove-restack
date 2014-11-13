@@ -47,15 +47,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="container">
+                <div class="container" ng-controller="dateController">
                     <div class="row" id="dobSelector" ng-show='ageFilter === "Date"'>
                         <div class="col-md-1">
                             <label>Begin:</label>
-                            <input id="dateStart" size="10">
+                            <input id="dateStart" date-picker ng-model="dobStart" size="10">
                         </div>
                         <div class="col-md-1">
                             <label>End:</label>
-                            <input id="dateEnd" size="10">
+                            <input id="dateEnd" date-picker ng-model="dobEnd" size="10">
                         </div>
                     </div>
                     <div class="row" id="ageSelector" ng-show='ageFilter === "Age"'>
