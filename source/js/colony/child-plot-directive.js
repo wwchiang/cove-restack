@@ -523,33 +523,58 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     };
 
 
-    //Filter the data by checking for a high and low value in the given object attribute name.
-    var filter_range = function( id,  attrName, attrValLow, attrValHigh) {
+    var age_to_date = function( age) {
+        // Convert age to a date
+        var msDay = 24 * 60 * 60 * 1000;
+        // Cannot be greater than tgtDate to meet min age
+        var tgtDate = new Date( Date.now() - (age * msDay));
+        var tgtYear = "" + tgtDate.getFullYear();
+        var tgtMonth = tgtDate.getMonth() + 1;
+        tgtMonth = tgtMonth > 9 ? "" + tgtMonth : "0" + tgtMonth;
+        var tgtDay = tgtDate.getDate();
+        tgtDay = tgtDay > 9 ? "" + tgtDay : "0" + tgtDay;
+        return parseInt(tgtYear + tgtMonth + tgtDay);
+    };
+
+
+    //Filter the mice data.
+    var filter_int_val = function( cmp_fxn, id, attrName, tgtVal ) {
+
         //Clear any previous filter for the same id.
         plotConfig.formattedData.remove_filter( id);
         plotConfig.formattedData.add_filter( id,  function(item) {
-            var lowBool = false;
-            var hiBool = false;
-            var dob = parseInt(item[attrName]);
-            dob = isNaN( dob) ? 0 : dob;
+            var res = false;
+            var itemVal = parseInt(item[attrName]);
+            itemVal = isNaN( itemVal) ? 0 : itemVal;
             // In case a low or hi limit value is not provided, default to true
-            if (isNaN(attrValLow)) {
-               lowBool = true;
+            if (!tgtVal) {
+               res = true;
             }
             else {
-               lowBool = dob >= attrValLow;
+               res = cmp_fxn( itemVal, tgtVal);
             }
-            if (isNaN(attrValHigh)) {
-               hiBool = true;
-            }
-            else {
-               hiBool = dob <= attrValHigh;
-            }
-            return lowBool && hiBool;
+            return res;
         });
         update_view();
     };
 
+    //The "dob" attribute of an object for a mouse, is in the format "yyyymmdd" so it can be treated
+    //as an integer for comparing if a date is earlier or later.
+    var filter_min_date = filter_int_val.curry( function( a, b) { return a >= b; } );
+
+    var filter_max_date = filter_int_val.curry( function( a, b) { return a <= b; } );
+
+    var filter_min_age = function( id, attrName, tgtVal) {
+        var tgtDate = age_to_date( tgtVal);
+        // Mice born earlier than tgtDate are the desired older mice.
+        filter_max_date( id, attrName, tgtDate);
+    };
+
+    var filter_max_age = function( id, attrName, tgtVal) {
+        var tgtDate = age_to_date( tgtVal);
+        // Mice born after tgtDate are the desired younger mice.
+        filter_min_date( id, attrName, tgtDate);
+    };
 
     var remove_filter = function( id) {
         plotConfig.formattedData.remove_filter( id);
@@ -565,7 +590,10 @@ var child_plot_link = function(scope, element, attrs, ctl) {
     ctl[0].format_gender = format_gender;
     ctl[0].search_mouse = search_mouse;
     ctl[0].filter_value = filter_value;
-    ctl[0].filter_range = filter_range;
+    ctl[0].filter_min_date = filter_min_date;
+    ctl[0].filter_max_date = filter_max_date;
+    ctl[0].filter_min_age = filter_min_age;
+    ctl[0].filter_max_age = filter_max_age;
     ctl[0].remove_filter = remove_filter;
     ctl[0].format_gender = format_gender;
     ctl[0].remove_format_gender = remove_format_gender;

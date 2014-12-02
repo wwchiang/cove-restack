@@ -51,21 +51,21 @@
                     <div class="row" id="dobSelector" ng-show='ageFilter === "Date"'>
                         <div class="col-md-1">
                             <label>Begin:</label>
-                            <input id="dateStart" date-picker ng-model="dobStart" size="10">
+                            <input id="dateStart" date-picker filter-min-date namefiltered="dob" ng-model="dobStart" size="10">
                         </div>
                         <div class="col-md-1">
                             <label>End:</label>
-                            <input id="dateEnd" date-picker ng-model="dobEnd" size="10">
+                            <input id="dateEnd" date-picker filter-max-date namefiltered="dob" ng-model="dobEnd" size="10">
                         </div>
                     </div>
                     <div class="row" id="ageSelector" ng-show='ageFilter === "Age"'>
                         <div class="col-md-1">
                             <label>Min days:</label>
-                            <input id="ageStart" size="10" >
+                            <input id="ageStart" filter-min-age namefiltered="dob" ng-model="minNum" size="8" >
                         </div>
                         <div class="col-md-1">
                             <label>Max days:</label>
-                            <input id="ageEnd" size="10" >
+                            <input id="ageEnd" filter-max-age namefiltered="dob" ng-model="maxNum" size="8" >
                         </div>
                     </div>
                 </div>

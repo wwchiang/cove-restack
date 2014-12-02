@@ -2,6 +2,8 @@
 colonyOptionsModule.controller('dateController', ['$scope', function(scope) {
     scope.dobStart = "";
     scope.dobEnd = "";
+    scope.minNum = "";
+    scope.maxNum = "";
 }]);
 
 colonyOptionsModule.directive('colonyoptions', function() {
@@ -69,6 +71,64 @@ colonyOptionsModule.directive('genderFilter', [function() {
     };
 }]);
 
+colonyOptionsModule.directive('filterMinDate', function() {
+    return {
+        restrict: 'A',
+        require: ['^plotParent'],
+        link: function(scope, element, attrs, ctl) {
+            element.bind("change", function() {
+                // Remove dashes from the date string.
+                var selectedDate = element.val().replace(/-/g, "");
+                ctl[0].filter_min_date( "filterMinVal", attrs["namefiltered"], selectedDate);
+            });
+        }
+    };
+});
+
+colonyOptionsModule.directive('filterMaxDate', function() {
+    return {
+        restrict: 'A',
+        require: ['^plotParent'],
+        link: function(scope, element, attrs, ctl) {
+            element.bind("change", function() {
+                // Remove dashes from the date string.
+                var selectedDate = element.val().replace(/-/g, "");
+                ctl[0].filter_max_date( "filterMaxVal", attrs["namefiltered"], selectedDate);
+            });
+        }
+    };
+});
+
+colonyOptionsModule.directive('filterMinAge', function() {
+    return {
+        restrict: 'A',
+        require: ['^plotParent'],
+        link: function(scope, element, attrs, ctl) {
+            element.bind("input", function() {
+                var selectedAge = parseInt( element.val());
+                if ( selectedAge) {
+                    ctl[0].filter_min_age( "filterMinVal", attrs["namefiltered"], selectedAge);
+                }
+            });
+        }
+    };
+});
+
+colonyOptionsModule.directive('filterMaxAge', function() {
+    return {
+        restrict: 'A',
+        require: ['^plotParent'],
+        link: function(scope, element, attrs, ctl) {
+            element.bind("input", function() {
+                var selectedAge = parseInt( element.val());
+                if ( selectedAge) {
+                    ctl[0].filter_max_age( "filterMaxVal", attrs["namefiltered"], selectedAge);
+                }
+            });
+        }
+    };
+});
+
 colonyOptionsModule.directive('datePicker', function() {
     return {
       // Enforce the angularJS default of restricting the directive to
@@ -87,13 +147,14 @@ colonyOptionsModule.directive('datePicker', function() {
 
         var optionsObj = {};
 
-        optionsObj.dateFormat = 'mm/dd/yy';
+        optionsObj.dateFormat = 'yy-mm-dd';
         var updateModel = function(dateTxt) {
           scope.$apply(function () {
             // Call the internal AngularJS helper to
             // update the two-way binding
             ngModel.$setViewValue(dateTxt);
           });
+          element.trigger("change");
         };
 
         optionsObj.onSelect = function(dateTxt, picker) {
@@ -104,6 +165,15 @@ colonyOptionsModule.directive('datePicker', function() {
           // Use the AngularJS internal 'binding-specific' variable
           element.datepicker('setDate', ngModel.$viewValue || '');
         };
+        element.datepicker(optionsObj);
+
+        // Adjust background color and opacity of the calendar.
+        $("#ui-datepicker-div")
+            .css("background-color", "rgba(250, 250, 250, 1)")
+            .click( function( event) {
+                event.stopPropagation();
+            });
+
       }
     };
   });
