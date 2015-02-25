@@ -16,7 +16,6 @@ var conn = mysql.createConnection({
 });
 conn.connect();
 
-
 /*
 // custom 404 page
 app.use(function(req, res){
@@ -41,7 +40,7 @@ app.listen(app.get('port'), function(){
 
 app.get('/data*',function(req, res){
 	
-	conn.query("SELECT `data` FROM `user_data` WHERE `key` = " + req.query.uid.toString(), function(err,rows){
+	conn.query("SELECT c.data FROM `user_colonies` AS uc, `colonies` AS c WHERE uc.uid = " + req.query.uid.toString() + " and uc.cid = c.key", function(err,rows){
 		if(err)
 		{
 			console.log("Problem with MySQL" + err);
@@ -51,4 +50,8 @@ app.get('/data*',function(req, res){
 			res.end(JSON.stringify(rows[0]));
 		}
 	});
+});
+
+app.get('/hello',function(req, res){
+			res.end('Hello world!');
 });
