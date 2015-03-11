@@ -1,0 +1,28 @@
+<!--Problem-->
+<!--This page gets redirected from index.html. Not sure how to get the values
+inside the LoginController's rootScope over here for access(userName, userEmail,
+and userID are currently stored as $rootScope variables-->
+
+<!--Note that this problem may be avoided entirely if we just do absolutely everything
+in the views.html main page, though that might be very cluttered.
+
+Also, we probably need sessions. Will look into this later - William -->
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Placeholder</title>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+    <script src="connect.js"></script>
+</head>
+<body ng-app="LoginApp">
+    <div id="main" ng-controller="LoginController">
+        <p>Hello, user! Your information is:</p>
+        <p>Username: {{userName}}</p>
+        <p>Email: {{userEmail}}</p>
+        <p>UserID: {{userID}}</p>
+        <p>Have a good day!</p>
+    </div>
+
+</body>
+</html>

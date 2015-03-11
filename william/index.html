@@ -1,0 +1,70 @@
+<!--Main Login Page
+This page(currently not stylized) retrieves data from the user base.
+fetch.php and register.php assume that the admin is root@localhost
+and the database is 'covelogins'. This is also mentioned in lines 13-16
+in fetch.php and register.php.
+
+Sorry if the code is terrible; the learning curve is steeper than Lomo
+- William
+-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example - example-example7-production</title>
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
+    <script src="connect.js"></script>
+
+
+
+</head>
+<body ng-app="LoginApp">
+<div id="main" ng-controller="LoginController">
+
+    <!--Initial Login Page-->
+    <div ng-show="action == 0">
+        <p>Login below, or <button ng-click="setAction(1)">click here to register</button></p>
+        <input type="text" ng-model="userName" placeholder="username" required/>
+        <input type="password" ng-model="userPassword" placeholder="password" required/>
+        <button type="submit" ng-click="login()">Submit</button>
+
+        <p>Username: {{userName}}</p>
+        <p>Password: {{userPassword}}</p>
+        <p>UserID: {{userID}}</p>
+        <p>Action: {{action}}</p>
+    </div>
+
+    <!--Registration-->
+    <div ng-show="action == 1">
+        <p>Sign up below, or <button ng-click="setAction(0)">click here to go back</button></p>
+        <input type="text" ng-model="userName"/>
+        <input type="password" ng-model="userPassword"/>
+        <input type="text" ng-model="userEmail"/>
+        <p>Action: {{action}}</p>
+        <button type="submit" ng-click="register()">Submit</button>
+    </div>
+
+    <!--Successful Login-->
+    <div ng-show="action == 2">
+        <h1>Successfully logged in!</h1>
+        <p>Now redirecting to member area.</p>
+        <!--Replace index.php -->
+        <meta http-equiv='refresh' content='=2;redirect.html' />
+        <p>If you are not redirected in 5 seconds, click <a href="redirect.html">here </a> to continue. </p>
+    </div>
+
+    <!--Successful Registration-->
+    <div ng-show="action == 3">
+        <h1>Successfully registered!</h1>
+        <p>Taking you back to the login page...</p>
+        <meta http-equiv='refresh' content='=2;index.html' />
+        <p>If you are not redirected in 5 seconds, click <a href="index.html">here</a> to continue.</p>
+
+    </div>
+</div>
+</body>
+</html>
+
+
