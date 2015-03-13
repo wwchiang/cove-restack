@@ -16,7 +16,8 @@ Sorry if the code is terrible; the learning curve is steeper than Lomo
 
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-beta.5/angular.min.js"></script>
     <script src="connect.js"></script>
-
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="normalize.css">
 
 
 </head>
@@ -25,25 +26,54 @@ Sorry if the code is terrible; the learning curve is steeper than Lomo
 
     <!--Initial Login Page-->
     <div ng-show="action == 0">
-        <p>Login below, or <button ng-click="setAction(1)">click here to register</button></p>
-        <input type="text" ng-model="userName" placeholder="username" required/>
-        <input type="password" ng-model="userPassword" placeholder="password" required/>
-        <button type="submit" ng-click="login()">Submit</button>
+        <section class="loginform cf">
+            <ul>
+                <h1>Member Login</h1>
+                <p>Login below, or <button ng-click="setAction(1)">click here to register</button></p>
+                <form>
+                    <fieldset>
+                        <li>
+                            <label for="username">Username:</label>
+                            <input type="text"  name="username" id="username" ng-model="userName" placeholder="username" required/>
+                        </li>
+                        <li>
+                            <label for="password">Password:</label>
+                            <input type="password" name="password" id="password" ng-model="userPassword" placeholder="password" required/>
+                        </li>
+                        <li>
+                            <input type="submit" name="login" id="login" value="Login" ng-click="login()"/>
+                        </li>
+                    </fieldset>
+                </form>
 
+
+            </ul>
+        </section>
+<!--
         <p>Username: {{userName}}</p>
         <p>Password: {{userPassword}}</p>
         <p>UserID: {{userID}}</p>
-        <p>Action: {{action}}</p>
+        <p>Action: {{action}}</p>-->
     </div>
 
     <!--Registration-->
     <div ng-show="action == 1">
-        <p>Sign up below, or <button ng-click="setAction(0)">click here to go back</button></p>
-        <input type="text" ng-model="userName"/>
-        <input type="password" ng-model="userPassword"/>
-        <input type="text" ng-model="userEmail"/>
-        <p>Action: {{action}}</p>
-        <button type="submit" ng-click="register()">Submit</button>
+        <section class="loginform cf">
+            <ul>
+                <h1>Register</h1>
+                <p>Sign up below, or <button ng-click="setAction(0)">click here to go back</button></p>
+                <form>
+                    <fieldset>
+                        <label for="username">Username:</label><input type="text" name="username" id="username"  ng-model="userName"/>
+                        <label for="password">Password:</label><input type="password" name="password" id="password" ng-model="userPassword"/>
+                        <label for="email">Email Address:</label><input type="text" name="email" id="email" ng-model="userEmail"/>
+                        <input type="submit" name="register" id="register" value="Register" ng-click="register()"/>
+                    </fieldset>
+                </form>
+            </ul>
+        </section>
+
+
     </div>
 
     <!--Successful Login-->
@@ -51,7 +81,7 @@ Sorry if the code is terrible; the learning curve is steeper than Lomo
         <h1>Successfully logged in!</h1>
         <p>Now redirecting to member area.</p>
         <!--Replace index.php -->
-        <meta http-equiv='refresh' content='=2;redirect.html' />
+        <meta http-equiv='refresh' content='=0;redirect.html' />
         <p>If you are not redirected in 5 seconds, click <a href="redirect.html">here </a> to continue. </p>
     </div>
 
@@ -59,7 +89,7 @@ Sorry if the code is terrible; the learning curve is steeper than Lomo
     <div ng-show="action == 3">
         <h1>Successfully registered!</h1>
         <p>Taking you back to the login page...</p>
-        <meta http-equiv='refresh' content='=2;index.html' />
+        <meta http-equiv='refresh' content='=0;index.html' />
         <p>If you are not redirected in 5 seconds, click <a href="index.html">here</a> to continue.</p>
 
     </div>

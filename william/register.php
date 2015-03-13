@@ -1,3 +1,8 @@
+
+<?php
+include "hash.php";
+?>
+
 <?php
 /**
  * Created by PhpStorm.
@@ -8,7 +13,7 @@
 
 $data = json_decode(file_get_contents("php://input"));
 $username = mysql_real_escape_string($data->userNm);
-$userpassword = mysql_real_escape_string($data->userPw);
+$userpassword = create_hash($data->userPw);
 $useremail = mysql_real_escape_string($data->userEm);
 
 //Note - These two lines assume that we are using root@localhost
@@ -21,7 +26,7 @@ mysql_select_db('covelogins', $con);
 $checklogin = mysql_query("SELECT * FROM users WHERE Username = '".$username."' AND Password = '".$userpassword."'");
 if(mysql_num_rows($checklogin) == 1)
 {
-    $arr = array('msg' => "", 'error' => 'User already exists with the same email.');
+    $arr = array('msg' => "", 'error' => 'User already exists with the same email or account name.');
     $jsn = json_encode($arr);
     print_r($jsn);
 

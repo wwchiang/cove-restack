@@ -24,6 +24,9 @@ myApp.controller('LoginController', ['$scope', '$http', '$rootScope', function($
 
     $scope.setAction = function(param) {
         $scope.action = param;
+        $scope.userName = "";
+        $scope.userPassword = "";
+        $scope.userEmail = "";
     }
 
     //Tries to login given the userName and userPassword field. If it's successful, it will
@@ -35,13 +38,17 @@ myApp.controller('LoginController', ['$scope', '$http', '$rootScope', function($
         $http.post('fetch.php', {'userNm': $scope.userName, 'userPw': $scope.userPassword})
             .success(function(data, status) {
                 if(data.msg != '') {
-                    console.log($rootScope.userID);
+
                     $rootScope.userID = data.userIden;
                     $rootScope.userEmail = data.userEm;
+
                     $scope.action = 2 ;
+                    $scope.msgs.push(data.msg);
+                    console.log(data.msg)
                 }
                 else {
                     $scope.errors.push(data.error);
+                    console.log(data.error);
                 }
             }).error(function(data, status){
                 $scope.errors.push(status);

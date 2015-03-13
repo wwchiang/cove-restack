@@ -1,3 +1,8 @@
+
+<?php
+include "hash.php";
+?>
+
 <?php
 /**
  * Created by PhpStorm.
@@ -16,21 +21,26 @@ $userpassword = mysql_real_escape_string($data->userPw);
 $con = mysql_connect('localhost', 'root', '');
 mysql_select_db('covelogins', $con);
 
+//$hash = mysql_query("SELECT Password FROM users WHERE Username = '".$username."'");
+//$checkTrue = validate_password($userpassword, $hash);
 $checklogin = mysql_query("SELECT * FROM users WHERE Username = '".$username."' AND Password = '".$userpassword."'");
 if(mysql_num_rows($checklogin) == 1)
 {
+//if (checkTrue) {
     $row = mysql_fetch_array($checklogin);
     $email = $row['EmailAddress'];
     $userid = $row['UserID'];
 
-    $arr = array('userIden' => $userid, 'userEm' => $email, 'error' => '');
+/*    $arr = array('msg'=> 'Got in!', 'userIden' => $userid, 'userEm' => $email, 'error' => '');
+    $jsn = json_encode($arr);
+    print_r($jsn);*/
+    $arr = array('msg' => "User successfuly registered");
     $jsn = json_encode($arr);
     print_r($jsn);
-
 }
 else
 {
-    $arr = array('msg' => "", 'error' => 'Wrong account name or password');
+    $arr = array('msg' => '', 'error' => 'Wrong account name or password');
     $jsn = json_encode($arr);
     print_r($jsn);
 }
