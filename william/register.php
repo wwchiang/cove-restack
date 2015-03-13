@@ -13,14 +13,14 @@ include "hash.php";
 
 $data = json_decode(file_get_contents("php://input"));
 $username = mysql_real_escape_string($data->userNm);
-$userpassword = create_hash($data->userPw);
+$userpassword = mysql_real_escape_string($data->userPw);
 $useremail = mysql_real_escape_string($data->userEm);
 
 //Note - These two lines assume that we are using root@localhost
 //for our admin control, and the database is "covelogins". Change
 //the database name depending on how it's set up.
 $con = mysql_connect('localhost', 'root', '');
-mysql_select_db('covelogins', $con);
+mysql_select_db('cove', $con);
 
 
 $checklogin = mysql_query("SELECT * FROM users WHERE Username = '".$username."' AND Password = '".$userpassword."'");

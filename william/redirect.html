@@ -16,12 +16,13 @@ Also, we probably need sessions. Will look into this later - William -->
     <script src="connect.js"></script>
 </head>
 <body ng-app="LoginApp">
+
     <div id="main" ng-controller="LoginController">
         <h1>Member Area</h1>
         <p>Hello, user! Your information is:</p>
-        <p>Username: {{userName}}</p>
-        <p>Email: {{userEmail}}</p>
-        <p>UserID: {{userID}}</p>
+        <p>Username: {{$root.userName}}</p>
+        <p>Email: {{$root.userEmail}}</p>
+        <p>UserID: {{$root.userID}}</p>
         <p>Have a good day!</p>
     </div>
 

@@ -4,7 +4,7 @@
 
 var myApp = angular.module('LoginApp', [])
     .run(function($rootScope) {
-        $rootScope.userID = "";
+        $rootScope.userID = "default";
         $rootScope.userName = "";
         $rootScope.userPassword = "";
         $rootScope.userEmail = "";
@@ -17,6 +17,10 @@ var myApp = angular.module('LoginApp', [])
 //Action 2 = Successfully Logged In, redirect to next page.
 //Action 3 = Successfully Registered, redirect to login page.
 myApp.controller('LoginController', ['$scope', '$http', '$rootScope', function($scope, $http, $rootScope) {
+	
+	console.log('Root -> '+$rootScope.userID);
+	console.log('Root -> '+$rootScope.userEmail);
+	
     $scope.errors = [];
     $scope.msgs = [];
     $scope.action = 0;
@@ -37,13 +41,22 @@ myApp.controller('LoginController', ['$scope', '$http', '$rootScope', function($
         $scope.errors = [];
         $http.post('fetch.php', {'userNm': $scope.userName, 'userPw': $scope.userPassword})
             .success(function(data, status) {
+				console.log("In");
+				
+				console.log(data);
+				
                 if(data.msg != '') {
-
+					
+					console.log("In");
                     $rootScope.userID = data.userIden;
                     $rootScope.userEmail = data.userEm;
-
+					
+					console.log('New ->' + $rootScope.userID);
+					console.log('New ->' + $rootScope.userEmail);
+					
                     $scope.action = 2 ;
                     $scope.msgs.push(data.msg);
+					
                     console.log(data.msg)
                 }
                 else {
@@ -79,4 +92,6 @@ myApp.controller('LoginController', ['$scope', '$http', '$rootScope', function($
             });
     }
 }]);
+
+
 

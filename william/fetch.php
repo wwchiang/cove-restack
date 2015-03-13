@@ -19,7 +19,7 @@ $userpassword = mysql_real_escape_string($data->userPw);
 //for our admin control, and the database is "covelogins". Change
 //the database name depending on how it's set up.
 $con = mysql_connect('localhost', 'root', '');
-mysql_select_db('covelogins', $con);
+mysql_select_db('cove', $con);
 
 //$hash = mysql_query("SELECT Password FROM users WHERE Username = '".$username."'");
 //$checkTrue = validate_password($userpassword, $hash);
@@ -34,7 +34,7 @@ if(mysql_num_rows($checklogin) == 1)
 /*    $arr = array('msg'=> 'Got in!', 'userIden' => $userid, 'userEm' => $email, 'error' => '');
     $jsn = json_encode($arr);
     print_r($jsn);*/
-    $arr = array('msg' => "User successfuly registered");
+    $arr = array('msg' => "Logged In", 'userIden' => $userid, 'userEm' => $email, 'error' => '');
     $jsn = json_encode($arr);
     print_r($jsn);
 }
